@@ -50,5 +50,5 @@ Note that these functions have shorter versions `hexdump` which defaults to base
 
 ###  textdump(txt, base; offset = 0, len = -1)
 
-    This method id the same as the former one but dumps only to stdout.
+    This method is the same as the previous method of that name, but dumps only to stdout.
     
