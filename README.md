@@ -31,8 +31,15 @@ Binary file dumpers in base 2 through 16 formats
     `filename` as bytes. The portion dumped defaults to all of the data until eof(), 
     or else, if specified, from `offset` to `len`.
 
-Note that these functions have shorter versions `hexdump` which defaults to base 16,
-`xxd` which defaults to base 2, and `decdump` which defaults to base 10. 
+Note that these functions have shorter versions:
+
+`hexdump` which defaults to base 16,
+
+`xxd` which defaults to base 2, 
+
+`octdump` which defaults to base 8, and 
+
+`decdump` which defaults to base 10. 
 
 #### Examples:
 
