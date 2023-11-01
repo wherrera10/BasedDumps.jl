@@ -118,10 +118,10 @@ octdump(filename::AbstractString; off = 0, len = -1) = baseddump(stdout, filenam
 
     This method id the same as the former one but dumps only to stdout.
 """
-function textdump(io::IO, txt::AbstractString, base::Integer; offset = 0, len = -1)
+function textdump(io::IO, txt::AbstractString, base = 16; offset = 0, len = -1)
     data = reinterpret(UInt8, txt)
     return baseddump(io, data, base; offset, len)
 end
-textdump(txt, base; offset = 0, len = -1) = textdump(stdout, txt, base; offset, len)
+textdump(txt, base = 16; offset = 0, len = -1) = textdump(stdout, txt, base; offset, len)
 
 end # module
