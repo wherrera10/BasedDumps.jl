@@ -71,17 +71,17 @@ baseddump(data; base = 16, offset = 0, len = -1) = baseddump(stdout, data; base,
     NB: if offset is not 0, the IO must be seekable or will likely error.
 """
 function baseddump(to::IO, from::IO; base = 16, offset = 0, len = -1)
-    flen = stat(io).length
+    flen = stat(from).length
     len = len < 0 ? flen - offset : min(len, flen - offset)
     offset != 0 && seek(from, offset)
-    data::Vector{UInt8} = read(io, len)
+    data::Vector{UInt8} = read(from, len)
     baseddump(io::IO, data; base)
 end
 
 """ Get data from a file named `filename` rather than a vector in memory. """
 function baseddump(to::IO, filename::AbstractString; base = 16, offset = 0, len = -1)
     fromio = open(filename)
-    return baseddump(to::IO, fromio; base, offset, len)
+    return baseddump(to, fromio; base, offset, len)
 end
 
 """ dump hex """
