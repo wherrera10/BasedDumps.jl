@@ -39,7 +39,7 @@ Examples:
     is a vector of bytes, to stderr in a binary format.
 
 """
-function baseddump(io::IO, data::Vector{UInt8}; base = 16, offset = 0, len = -1)
+function baseddump(io::IO, data::Vector{UInt8}; base = 16, offset = 0, len = -1, displayadjust = 0)
     @assert 2 <= base <= 16 "display base $base not supported"
     len = len < 0 ? length(data) : min(len, length(data))
     bytes = data[begin+offset:len]
@@ -47,7 +47,7 @@ function baseddump(io::IO, data::Vector{UInt8}; base = 16, offset = 0, len = -1)
     padsize = base == 16 ? 2 : base == 2 ? 8 : base > 7 ? 3 : base > 3 ? 4 : 5
     midpad = " "^(base != 2)
     vl = (padsize + 1) * fullchunksize + length(midpad)
-    halflen, pos = fullchunksize ÷ 2, 0
+    halflen, pos = fullchunksize ÷ 2, offset + displayadjust
     for chunk in Iterators.partition(bytes, fullchunksize)
         chunklen = length(chunk)
         values = map(n -> string(n, base = base, pad = padsize) * " ", chunk)
@@ -59,7 +59,7 @@ function baseddump(io::IO, data::Vector{UInt8}; base = 16, offset = 0, len = -1)
         println(io, string(pos, base = 16, pad = 8) * " " * rpad(s1, vl) * "|" * s2 * "|")
         pos += chunklen
     end
-    println(io, string(pos, base = 16, pad = 8))
+    println(io, string(pos - offset - displayadjust, base = 16, pad = 8))
 end
 function baseddump(io::IO, data::Array; base = 16, offset = 0, len = -1)
     bytevec::Vector{UInt8} = UInt8.(transcode(UInt8, data))
@@ -69,13 +69,15 @@ baseddump(data; base = 16, offset = 0, len = -1) = baseddump(stdout, data; base,
 
 """ Get data from a stream `from` rather than a vector of data in memory.
     NB: if offset is not 0, the IO must be seekable or will likely error.
+    The `displayadjust` keeps the offset display even though we only read
+    the needed bytes from the file in the position specified.
 """
 function baseddump(to::IO, from::IO; base = 16, offset = 0, len = -1)
     flen = stat(from).size
     len = len < 0 ? flen - offset : min(len, flen - offset)
     offset != 0 && seek(from, offset)
     data::Vector{UInt8} = read(from, len)
-    baseddump(to, data; base)
+    baseddump(to, data; base = base, offset = 0, displayadjust = offset)
 end
 
 """ Get data from a file named `filename` rather than a vector in memory. """
