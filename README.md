@@ -1,7 +1,8 @@
 # BasedDumps.jl
 Binary file dumpers in base 16, 10 and 2 formats
 
-</ br></ br>
+![dumper](https://github.com/wherrera10/BasedDumps.jl/assets/10413436/9c5be9c6-4a75-4379-ba32-7181ffb425f5)
+
 
 ## Functions:
 
