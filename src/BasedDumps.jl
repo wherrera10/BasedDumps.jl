@@ -45,20 +45,20 @@ function baseddump(io::IO, data::Vector{UInt8}, base = 16; offset = 0, len = -1)
 	bytes = data[begin+offset:len]
 	fullchunksize = base == 16 ? 16 : base > 8 ? 10 : base > 4 ? 8 : 6
     padsize = base == 16 ? 2 : base ==  2 ? 7 : base > 7 ? 3 : base > 3 ? 4 : 5
-    midpad = " "^(1 + base != 2)
-    vl = (padsize + 1) * fullchunksize + length(midpad)
+    midpad = " "^(base != 2)
+    vl = (padsize + 1) * fullchunksize + length(midpad) + 1
 	halflen, pos = fullchunksize ÷ 2, 0
 	for chunk in Iterators.partition(bytes, fullchunksize)
-		chunklen = length(chunk)
-		values = map(n -> string(n, base = base, pad = padsize) * " ", chunk)
-		s1 = join(values[begin:begin+min(halflen, chunklen)-1])
-		if chunklen > halflen
-			s1 *= midpad * join(values[begin+halflen:end])
-		end
-		s2 = prod(map(n -> n < 128 && isprint(Char(n)) ? Char(n) : '.', chunk))
-		println(io, string(pos, base = 16, pad = 8) * " " * rpad(s1, vl) * "|" * s2 * "|")
-		pos += chunklen
-	end
+	    chunklen = length(chunk)
+	    values = map(n -> string(n, base = base, pad = padsize) * " ", chunk)
+	    s1 = join(values[begin:begin+min(halflen, chunklen)-1])
+	    if chunklen > halflen
+	        s1 *= midpad * join(values[begin+halflen:end])
+	    end
+	    s2 = prod(map(n -> n < 128 && isprint(Char(n)) ? Char(n) : '.', chunk))
+            println(io, string(pos, base = 16, pad = 8) * " " * rpad(s1, vl) * "|" * s2 * "|")
+	    pos += chunklen
+        end
 	println(io, string(pos, base = 16, pad = 8))
 end
 function baseddump(io::IO, data::Array, base = 16; offset = 0, len = -1)
