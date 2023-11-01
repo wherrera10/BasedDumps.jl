@@ -75,7 +75,7 @@ function baseddump(to::IO, from::IO; base = 16, offset = 0, len = -1)
     len = len < 0 ? flen - offset : min(len, flen - offset)
     offset != 0 && seek(from, offset)
     data::Vector{UInt8} = read(from, len)
-    baseddump(io::IO, data; base)
+    baseddump(to, data; base)
 end
 
 """ Get data from a file named `filename` rather than a vector in memory. """
