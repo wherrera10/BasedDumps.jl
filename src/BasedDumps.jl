@@ -62,7 +62,7 @@ function baseddump(io::IO, data::Vector{UInt8}, base = 16; offset = 0, len = -1)
     println(io, string(pos, base = 16, pad = 8))
 end
 function baseddump(io::IO, data::Array, base = 16; offset = 0, len = -1)
-    bytevec = collect(reinterpret(UInt8, vec(data)))
+    bytevec = collect(vec(reinterpret(UInt8, data)))
     return baseddump(io, bytevec, base; offset, len)
 end
 baseddump(data, base = 16; offset = 0, len = -1) = baseddump(stdout, data, base; offset, len)
