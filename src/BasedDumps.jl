@@ -83,7 +83,8 @@ end
 """ Get data from a file named `filename` rather than a vector in memory. """
 function baseddump(to::IO, filename::AbstractString; base = 16, offset = 0, len = -1)
     fromio = open(filename)
-    return baseddump(to, fromio; base, offset, len)
+    baseddump(to, fromio; base, offset, len)
+    close(fromio)
 end
 
 """ dump hex """
