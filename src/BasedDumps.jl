@@ -7,9 +7,9 @@ export baseddump, hexdump, xxd, decdump, textdump
 
     5 methods.
 
-function baseddump(io::IO, data::Vector{UInt8}, base = 16; offset = 0, len = -1)
-function baseddump(io::IO, data::Array, base = 16; offset = 0, len = -1)
-function baseddump(data, base = 16; offset = 0, len = -1)
+function baseddump(io::IO, data::Vector{UInt8}; base = 16, offset = 0, len = -1)
+function baseddump(io::IO, data::Array; base = 16, offset = 0, len = -1)
+function baseddump(data; base = 16, offset = 0, len = -1)
 
     Print (to stdout, or if specified io) a dump of `data` as bytes. The portion
     dumped defaults to all of data, or else, if specified, from `offset` to `len`.
@@ -21,8 +21,8 @@ function baseddump(data, base = 16; offset = 0, len = -1)
     for base 2 (binary), base 8 (octal), base 10 (decimal), and the default 16
     (hexadecimal).
 
-function baseddump(to::IO, from::IO, base = 16; offset = 0, len = -1)
-function baseddump(to::IO, filename::AbstractString, base = 16; offset = 0, len = -1)
+function baseddump(to::IO, from::IO; base = 16, offset = 0, len = -1)
+function baseddump(to::IO, filename::AbstractString; base = 16; offset = 0, len = -1)
 
     Print (to stdout, or if specified to the IO `to`) a dump of the stream `from` or file
     `filename` as bytes. The portion dumped defaults to all of the data until eof(),
@@ -39,7 +39,7 @@ Examples:
     is a vector of bytes, to stderr in a binary format.
 
 """
-function baseddump(io::IO, data::Vector{UInt8}, base = 16; offset = 0, len = -1)
+function baseddump(io::IO, data::Vector{UInt8}; base = 16, offset = 0, len = -1)
     @assert 2 <= base <= 16 "display base $base not supported"
     len = len < 0 ? length(data) : min(len, length(data))
     bytes = data[begin+offset:len]
@@ -61,27 +61,27 @@ function baseddump(io::IO, data::Vector{UInt8}, base = 16; offset = 0, len = -1)
     end
     println(io, string(pos, base = 16, pad = 8))
 end
-function baseddump(io::IO, data::Array, base = 16; offset = 0, len = -1)
-    bytevec = collect(UInt8.(transcode(UInt8, collect(data))))
-    return baseddump(io, bytevec, base; offset, len)
+function baseddump(io::IO, data::Array; base = 16, offset = 0, len = -1)
+    bytevec::Vector{UInt8} = UInt8.(transcode(UInt8, data))
+    return baseddump(io, bytevec; base, offset, len)
 end
-baseddump(data, base = 16; offset = 0, len = -1) = baseddump(stdout, data, base; offset, len)
+baseddump(data; base = 16, offset = 0, len = -1) = baseddump(stdout, data; base, offset, len)
 
 """ Get data from a stream `from` rather than a vector of data in memory.
     NB: if offset is not 0, the IO must be seekable or will likely error.
 """
-function baseddump(to::IO, from::IO, base = 16; offset = 0, len = -1)
+function baseddump(to::IO, from::IO; base = 16, offset = 0, len = -1)
     flen = stat(io).length
     len = len < 0 ? flen - offset : min(len, flen - offset)
     offset != 0 && seek(from, offset)
-    data = read(io, len)
-    baseddump(io::IO, data, base)
+    data::Vector{UInt8} = read(io, len)
+    baseddump(io::IO, data; base)
 end
 
 """ Get data from a file named `filename` rather than a vector in memory. """
-function baseddump(to::IO, filename::AbstractString, base = 16; offset = 0, len = -1)
+function baseddump(to::IO, filename::AbstractString; base = 16, offset = 0, len = -1)
     fromio = open(filename)
-    return baseddump(to::IO, fromio, base; offset, len)
+    return baseddump(to::IO, fromio; base, offset, len)
 end
 
 """ dump hex """
@@ -90,22 +90,22 @@ hexdump(data; offset = 0, len = -1) = baseddump(data; offset, len)
 hexdump(filename::AbstractString; off = 0, len = -1) = hexdump(stdout, filename; off, len)
 
 """ dump binary """
-xxd(io::IO, data; offset = 0, len = -1) = baseddump(io, data, 2; offset, len)
-xxd(data; offset = 0, len = -1) = baseddump(data, 2; offset, len)
-xxd(filename::AbstractString; off = 0, len = -1) = baseddump(stdout, filename, 2; off, len)
+xxd(io::IO, data; offset = 0, len = -1) = baseddump(io, data; base = 2, offset, len)
+xxd(data; offset = 0, len = -1) = baseddump(data; base = 2, offset, len)
+xxd(filename::AbstractString; off = 0, len = -1) = baseddump(stdout, filename; base = 2, off, len)
 
 """ dump decimal """
-decdump(io::IO, data; offset = 0, len = -1) = baseddump(io, data, 10; offset, len)
-decdump(data; offset = 0, len = -1) = baseddump(data, 10; offset, len)
-decdump(filename::AbstractString; off = 0, len = -1) = baseddump(stdout, filename, 10; off, len)
+decdump(io::IO, data; offset = 0, len = -1) = baseddump(io, data; base = 10, offset, len)
+decdump(data; offset = 0, len = -1) = baseddump(data; base = 10, offset, len)
+decdump(filename::AbstractString; offset = 0, len = -1) = baseddump(stdout, filename; base = 10, offset, len)
 
 """ dump octal """
-octdump(io::IO, data; offset = 0, len = -1) = baseddump(io, data, 8; offset, len)
-octdump(data; offset = 0, len = -1) = baseddump(data, 8; offset, len)
-octdump(filename::AbstractString; off = 0, len = -1) = baseddump(stdout, filename, 8; off, len)
+octdump(io::IO, data; offset = 0, len = -1) = baseddump(io, data, base = 8, offset, len)
+octdump(data; offset = 0, len = -1) = baseddump(data; base = 8, offset, len)
+octdump(filename::AbstractString; offset = 0, len = -1) = baseddump(stdout, filename; base = 8, offset, len)
 
 """
-    textdump(io::IO, txt::AbstractString, base::Integer; off = 0, len = -1)
+    textdump(io::IO, txt::AbstractString, base::Integer; offset = 0, len = -1)
 
 Dump (with `baseddump`) the string `txt`. Julia strings will be interpreted
 as utf-8 text, with mulitbyte chars displayed in little endian order.
@@ -114,10 +114,10 @@ as utf-8 text, with mulitbyte chars displayed in little endian order.
 
 This method is the same as the former one but dumps only to stdout.
 """
-function textdump(io::IO, txt::AbstractString, base = 16; offset = 0, len = -1)
-    data = collect(reinterpret(UInt8, transcode(UInt8, txt)))
-    return baseddump(io, data, base; offset, len)
+function textdump(io::IO, txt::AbstractString; base = 16, offset = 0, len = -1)
+    data::Vector{UInt8} = UInt8.(transcode(UInt8, txt))
+    return baseddump(io, data; base, offset, len)
 end
-textdump(txt, base = 16; offset = 0, len = -1) = textdump(stdout, txt, base; offset, len)
+textdump(txt; base = 16, offset = 0, len = -1) = textdump(stdout, txt; base, offset, len)
 
 end # module
