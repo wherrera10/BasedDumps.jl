@@ -43,12 +43,9 @@ Note that these functions have shorter versions `hexdump` which defaults to base
 
 ### textdump(io::IO, txt::AbstractString, base::Integer; off = 0, len = -1)
 
-    Dump (with `baseddump`) the string `txt`. Julia strings and utf-8 text
-    will be interpreted as vectors of UInt8 corresponding to their bytes, and
-    utf-16 text will retain its 16-bit character as little endian text, so
-    ASCII chars within the utf-16 text will be displayed with a following 0
-    byte in data displayed, and two-byte utf-8 chars with be displayed as two
-    bytes, in lower byte then upper byte order.
+    Dump (with `baseddump`) the string `txt`. Julia strings will be interpreted
+    as utf-8 text, with mulitbyte chars displayed in little endian order.
+
 
 ###  textdump(txt, base; offset = 0, len = -1)
 
