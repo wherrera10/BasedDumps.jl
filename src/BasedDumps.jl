@@ -71,7 +71,7 @@ baseddump(data; base = 16, offset = 0, len = -1) = baseddump(stdout, data; base,
     NB: if offset is not 0, the IO must be seekable or will likely error.
 """
 function baseddump(to::IO, from::IO; base = 16, offset = 0, len = -1)
-    flen = stat(from).length
+    flen = stat(from).size
     len = len < 0 ? flen - offset : min(len, flen - offset)
     offset != 0 && seek(from, offset)
     data::Vector{UInt8} = read(from, len)
