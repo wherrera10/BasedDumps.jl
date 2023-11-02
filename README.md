@@ -10,9 +10,9 @@ Binary memory and file dumpers in base 2 through 16 formats
 
     5 methods.
 
-### function baseddump(io::IO, data::Vector{UInt8}, base = 16; offset = 0, len = -1)
-### function baseddump(io::IO, data::AbstractArray, base = 16; offset = 0, len = -1)
-### function baseddump(data, base = 16; offset = 0, len = -1)
+### function baseddump(io::IO, data::Vector{UInt8}; base = 16, offset = 0, len = -1)
+### function baseddump(io::IO, data::AbstractArray; base = 16, offset = 0, len = -1)
+### function baseddump(data; base = 16, offset = 0, len = -1)
 
 
     Print (to stdout, or if specified io) a dump of `data`. The function will attempt
@@ -30,8 +30,8 @@ Binary memory and file dumpers in base 2 through 16 formats
     for base 2 (binary), base 8 (octal), base 10 (decimal), and the default 16
     (hexadecimal).
 
-### function baseddump(to::IO, from::IO, base = 16; offset = 0, len = -1)
-### function baseddump(to::IO, filename::AbstractString, base = 16; offset = 0, len = -1)
+### function baseddump(to::IO, from::IO; base = 16, offset = 0, len = -1)
+### function baseddump(to::IO, filename::AbstractString; base = 16, offset = 0, len = -1)
 
     Print (to stdout, or if specified to the IO `to`) a dump of the stream `from` or file
     `filename` as bytes. The portion dumped defaults to all of the data until eof(), 
@@ -55,13 +55,13 @@ Note that these functions have shorter versions:
     is a vector of bytes, to stderr in a binary format.
     
 
-### textdump(io::IO, txt::AbstractString, base::Integer; off = 0, len = -1)
+### textdump(io::IO, txt::AbstractString; base = 16, off = 0, len = -1)
 
     Dump (with `baseddump`) the string `txt`. Julia strings will be interpreted
     as utf-8 text, with mulitbyte chars displayed in little endian order.
 
 
-###  textdump(txt, base; offset = 0, len = -1)
+###  textdump(txt; base = 16, offset = 0, len = -1)
 
     This method is the same as the previous method of that name, but dumps only to stdout.
     
