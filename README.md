@@ -1,5 +1,5 @@
 # BasedDumps.jl
-Binary file dumpers in base 2 through 16 formats
+Binary memory and file dumpers in base 2 through 16 formats
 
 ![dumper](https://github.com/wherrera10/BasedDumps.jl/assets/10413436/c37ce242-d70a-4527-a145-d3d10c517db2)
 
