@@ -11,7 +11,7 @@ Binary file dumpers in base 2 through 16 formats
     5 methods.
 
 ### function baseddump(io::IO, data::Vector{UInt8}, base = 16; offset = 0, len = -1)
-### function baseddump(io::IO, data::Array, base = 16; offset = 0, len = -1)
+### function baseddump(io::IO, data::AbstractArray, base = 16; offset = 0, len = -1)
 ### function baseddump(data, base = 16; offset = 0, len = -1)
 
     Print (to stdout, or if specified io) a dump of `data` as bytes. The portion
