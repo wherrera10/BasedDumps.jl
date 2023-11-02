@@ -17,11 +17,11 @@ Binary file dumpers in base 2 through 16 formats
     Print (to stdout, or if specified io) a dump of `data` as bytes. The portion
     dumped defaults to all of data, or else, if specified, from `offset` to `len`.
     The `base` used to print the data is between 16 (default) and 2 (binary).
-    The data is formatted similar to the format of the unix utilities `hexdump` or
-    `xxd` for bases 16 and 2, the decimal format for `base` 10 is similar to unix
-    `hexdump` but with decimal format and similarly for base 8 and octal format.
+    The data is formatted similar to the formatting of the unix utilities `hexdump` or
+    `xxd` for bases 16 and 2, and the decimal format for `base` 10 is similar to unix
+    `hexdump` but with decimal format, and similarly for base 8 and octal format.
     Any base between 2 and 16 is supported, but there are shorter function names 
-    for base 2 (binary), base 8 (octal), base 10 (decimal), and the default 16
+    for base 2 (binary), base 8 (octal), base 10 (decimal), and for the default base 16
     (hexadecimal).
 
 ### function baseddump(to::IO, from::IO, base = 16; offset = 0, len = -1)
