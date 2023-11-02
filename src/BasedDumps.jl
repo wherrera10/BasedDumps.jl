@@ -8,10 +8,11 @@ export baseddump, hexdump, xxd, decdump, textdump
     5 methods.
 
 function baseddump(io::IO, data::Vector{UInt8}; base = 16, offset = 0, len = -1)
-function baseddump(io::IO, data::AbstractArray; base = 16, offset = 0, len = -1)
+function baseddump(io::IO, data; base = 16, offset = 0, len = -1)
 function baseddump(data; base = 16, offset = 0, len = -1)
 
-    Print (to stdout, or if specified io) a dump of `data` as bytes. The portion
+    Print (to stdout, or if specified io) a dump of `data`. The function will attempt
+    to convert non-UInt8 array or string data to a vector of UInt8 bytes. The portion
     dumped defaults to all of data, or else, if specified, from `offset` to `len`.
     The `base` used to print the data is between 16 (default) and 2 (binary).
     The data is formatted similar to the format of the unix utilities `hexdump` or
@@ -61,9 +62,9 @@ function baseddump(io::IO, data::Vector{UInt8}; base = 16, offset = 0, len = -1,
     end
     println(io, string(pos - offset - displayadjust, base = 16, pad = 8))
 end
-function baseddump(io::IO, data::AbstractArray; base = 16, offset = 0, len = -1)
+function baseddump(io::IO, data; base = 16, offset = 0, len = -1)
     bytevec::Vector{UInt8} = data <: AbstractString ? transcode(UInt8, data) : reinterpret(UInt8, data)
-    return baseddump(io, bytevec; base, offset, len)
+    return baseddump(io, vec(collect(bytevec)); base, offset, len)
 end
 baseddump(data; base = 16, offset = 0, len = -1) = baseddump(stdout, data; base, offset, len)
 
