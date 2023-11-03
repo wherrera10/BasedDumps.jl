@@ -47,7 +47,7 @@ Examples:
 function baseddump(io::IO, data::Vector{UInt8}; base = 16, offset = 0, len = -1, displayadjust = 0)
     @assert 2 <= base <= 16 "display base $base not supported"
     len = len < 0 ? length(data) : min(len, length(data))
-    bytes = data[begin+offset:len+offset]
+    bytes = data[begin+offset:len+offset-1]
     fullchunksize = base == 16 ? 16 : base > 8 ? 10 : base > 4 ? 8 : 6
     padsize = base == 16 ? 2 : base == 2 ? 8 : base > 7 ? 3 : base > 3 ? 4 : 5
     midpad = " "^(base != 2)
