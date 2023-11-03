@@ -20,8 +20,12 @@ result = @capture_out baseddump(fname, offset = 16)
 @test contains(result, "6f 72 20 69 6e")
 
 for base in 2:16
-    bresult = @capture_out baseddump(stdout, collect(tstr); base, offset = base * 2)
-    @test contains(bresult, ".|")
+    off = base + rand(1:5)
+    leng = rand(8:16)
+    bresult = @capture_out baseddump(stdout, collect(tstr); base, offset = off, len = leng)
+    @test contains(bresult, string(off, base = 16, pad = 8))
+    @test contains(bresult, string(leng, base = 16, pad = 8))
     bresult = @capture_out textdump(stdout, str; base, offset = base * 2)
+    @test contains(bresult, string(base * 2, base = 16, pad = 8))
     @test contains(bresult, ".|")
 end
