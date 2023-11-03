@@ -1,4 +1,4 @@
-module BasedDumps
+` + module BasedDumps
 
 export baseddump, hexdump, xxd, decdump, textdump
 
@@ -15,9 +15,9 @@ function baseddump(data; base = 16, offset = 0, len = -1)
     to convert non-UInt8 data to a vector of UInt8 bytes. If a string is passed for 
     data, the function will interpret this as a file name for the data, so for string
     data textdump() should be used, as shown below. The portion of data that is 
-    dumped defaults to all of data, or else, if specified, from `offset` to `len`.
-    The `offset` is printed as the first hex numeric entry on the left, and the final
-    count of bytes dumped is printed as the last hex number on the left.
+    dumped defaults to all of data, or else, if specified, from `offset` to `offset` +
+    `len`. The `offset` is printed as the first hex numeric entry on the left, and the
+    final count of bytes dumped is printed as the last hex number on the left.
     The `base` used to print the data is between 16 (default) and 2 (binary).
     The data is formatted similar to the format of the unix utilities `hexdump` or
     `xxd` for bases 16 and 2, the decimal format for `base` 10 is similar to unix
@@ -47,7 +47,7 @@ Examples:
 function baseddump(io::IO, data::Vector{UInt8}; base = 16, offset = 0, len = -1, displayadjust = 0)
     @assert 2 <= base <= 16 "display base $base not supported"
     len = len < 0 ? length(data) : min(len, length(data))
-    bytes = data[begin+offset:len]
+    bytes = data[begin+offset:len+offset]
     fullchunksize = base == 16 ? 16 : base > 8 ? 10 : base > 4 ? 8 : 6
     padsize = base == 16 ? 2 : base == 2 ? 8 : base > 7 ? 3 : base > 3 ? 4 : 5
     midpad = " "^(base != 2)
